@@ -133,23 +133,33 @@
         // =========== Component Definitions (Order is important!) ===========
 
         // --- Navbar ---
-        function Navbar({ onProjectClick }) {
-            const navLinks = [ { id: 'about', title: 'About' }, { id: 'experience', title: 'Experience' }, { id: 'skills', title: 'Skills' }, { id: 'contact', title: 'Contact' } ];
-            return (
-                <header className="bg-brand-bg/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-700">
-                    <div className="container mx-auto flex justify-between items-center p-4">
-                        <a href="#" className="font-display font-bold text-xl text-brand-text-light">Kanchana Piyasekara</a>
-                        <nav className="hidden md:flex space-x-6 items-center">
-                            {navLinks.map(link => ( <a key={link.id} href={`#${link.id}`} className="font-medium text-brand-text-light hover:text-brand-primary transition-colors duration-300">{link.title}</a> ))}
-                            <button onClick={() => onProjectClick(null)} className="font-medium text-brand-text-light hover:text-brand-primary transition-colors duration-300">Projects</button>
-                            {/* ===> IMPORTANT: Replace '#' with the actual path to your resume file <=== */}
-                            <a href="/cv.pdf" download="Kanchana_Piyasekara_CV.pdf" className="bg-brand-primary text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700 transition-transform duration-300 hover:scale-105 shadow-md text-sm">Resume</a>
-                        </nav>
-                    </div>
-                </header>
-            );
-        }
+ function Navbar({ onProjectClick }) {
+    const navLinks = [ { id: 'about', title: 'About' }, { id: 'experience', title: 'Experience' }, { id: 'skills', title: 'Skills' }, { id: 'contact', title: 'Contact' } ];
+    
+    // The direct download link for your resume
+    const resumeUrl = "https://drive.google.com/uc?export=download&id=18wHD9zsA5eTetgTVf8K9DaPUmQa068dt";
 
+    return (
+        <header className="bg-brand-bg/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-700">
+            <div className="container mx-auto flex justify-between items-center p-4">
+                <a href="#" className="font-display font-bold text-xl text-brand-text-light">Kanchana Piyasekara</a>
+                <nav className="hidden md:flex space-x-6 items-center">
+                    {navLinks.map(link => ( <a key={link.id} href={`#${link.id}`} className="font-medium text-brand-text-light hover:text-brand-primary transition-colors duration-300">{link.title}</a> ))}
+                    <button onClick={() => onProjectClick(null)} className="font-medium text-brand-text-light hover:text-brand-primary transition-colors duration-300">Projects</button>
+                    
+                    {/* ===> THIS LINK IS NOW UPDATED <=== */}
+                    <a 
+                        href={resumeUrl} 
+                        download="Kanchana_Piyasekara_CV.pdf" 
+                        className="bg-brand-primary text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700 transition-transform duration-300 hover:scale-105 shadow-md text-sm"
+                    >
+                        Resume
+                    </a>
+                </nav>
+            </div>
+        </header>
+    );
+}
         // --- Hero ---
         function Hero() {
             return (
@@ -215,19 +225,19 @@ function Education() {
             school: 'Kegalu Vidyalaya', 
             period: 'Class of 2021', 
             description: 'Excelled in the G.C.E. Advanced Level curriculum, specializing in the Physical Science stream. Mastered core principles of Combined Mathematics, Physics, and Chemistry, which honed my quantitative reasoning and systematic problem-solving abilities, laying the groundwork for my degree in Computing.',
-            logo: 'images/kv-school.jpg'
+            logo: 'https://res.cloudinary.com/dn8u15evb/image/upload/v1757262051/kv-school_vf15vb.jpg'
         },
         { 
             school: 'Ruwanwella Royal Collage', 
             period: 'Class of 2018', 
             description: 'Completed my G.C.E. Ordinary Level education while actively engaging in leadership roles. As Secretary of the Science Society, I organized the annual science fair, coordinating student teams and faculty, which was pivotal in developing my communication and project planning skills.',
-            logo: 'images/rcc-school.jpg'
+            logo: 'https://res.cloudinary.com/dn8u15evb/image/upload/v1757262053/rcc-school_i71oeb.jpg'
         },
         { 
             school: 'N.M Perera Central Collage', 
             period: 'Class of 2010', 
             description: 'Developed a strong academic foundation where early engagement with school media projects and IT coursework first sparked my interest in digital creativity and logical thinking, a passion that has guided my academic and professional journey ever since.',
-            logo: 'images/nm-school.jpg'
+            logo: 'https://res.cloudinary.com/dn8u15evb/image/upload/v1757262056/nm-school_eswjns.jpg'
         },
     ];
 
@@ -302,46 +312,66 @@ function Education() {
         
         // --- UPDATED Experience Section ---
         function Experience() {
-            const experiences = [
-                { 
-                    organization: "KHP Photography", 
-                    orgLink: "#", // Dummy link for the studio website
-                    image: "images/work-khp-bg.jpg",
-                    logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.776 48.776 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" /></svg>`,
-                    roles: [ 
-                        { role: "Owner & Lead Photographer", period: "2022 - Present", description: "Established and currently direct all operations for KHP Photography, a client-focused studio dedicated to capturing high-impact moments. I manage the entire project lifecycle, from initial client consultation and concept development to on-site execution and post-production editing. My work, spanning over 20 unique events, has helped clients build their brand and preserve important memories." }
-                    ],
-                    button: { text: "Visit Studio Website", link: "#" }
-                },
-                { 
-                    organization: "Sasnaka Sansada Foundation", 
-                    orgLink: "https://www.linkedin.com/company/sasnaka/posts/?feedView=all", 
-                    image: "images/work-sasnaka-bg.jpg", 
-                    logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>`,
-                    roles: [ 
-                        { role: "Co-Head Photography Division", period: "Apr 2024 - Present", description: "I co-lead the strategic direction and execution of all photographic content for the foundation's nationwide events. My responsibilities include team coordination, equipment management, and ensuring the final visual assets align with the organization's mission and communication goals." }, 
-                        { role: "Member, Ganitha Saviya Project", period: "Jan 2024 - Present", description: "As a volunteer educator, I contribute to the Ganitha Saviya project by teaching O/L level mathematics to students in underserved schools. This involves developing supplementary curriculum materials, conducting engaging lessons, and preparing students for national examinations." } 
-                    ] 
-                },
-                { 
-                    organization: "IEEE Student Branch of SUSL", 
-                    orgLink: "#", 
-                    image: "images/work-ieee-bg.jpg", 
-                    logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M15.75 3v1.5M12 4.5v15M15.75 21v-1.5" /></svg>`,
-                    roles: [ 
-                        { role: "Committee Member & Faculty Coordinator", period: "Sept 2024 - Present", description: "As the key liaison for the 22/23 computing faculty batch, I drive student engagement in IEEE initiatives. My role involves actively recruiting and managing volunteers, promoting workshops and technical sessions through various channels, and fostering a collaborative community to maximize participation." } 
-                    ] 
-                },
-                { 
-                    organization: "Sundara Belihuloya Media Crew", 
-                    orgLink: "https://www.facebook.com/share/177kLXS5wz/", 
-                    image: "images/work-sb-bg.jpg", 
-                    logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048l5.962-5.962a.75.75 0 011.06 0l2.298 2.298a.75.75 0 010 1.06l-5.962 5.962A8.252 8.252 0 0112 21z" /></svg>`,
-                    roles: [ 
-                        { role: "Photographer & Batch Coordinator", period: "July 2025 - Present", description: "I lead the coordination for the 22/23 batch media team, aligning our content strategy with university-wide events. In my role as a photographer, I have covered more than five significant campus events, delivering high-quality visual stories that capture the spirit of our university for official publications and social media." } 
-                    ] 
-                }
-            ];
+        const experiences = [
+    { 
+        organization: "KHP Photography", 
+        orgLink: "#",
+        image: "https://res.cloudinary.com/dn8u15evb/image/upload/v1757262112/work-khp-bg_tbx4xj.jpg",
+        logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.776 48.776 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" /></svg>`,
+        roles: [ 
+            { 
+                role: "Owner & Lead Photographer", 
+                period: "2022 - Present", 
+                description: "As the founder of KHP Photography, I architected a client-centric studio from the ground up, overseeing all business and creative operations. I manage the end-to-end project lifecycle, beginning with in-depth client consultations to define their vision, followed by on-location creative direction and execution. My post-production workflow is streamlined to ensure timely delivery of high-quality, edited assets. Having successfully covered over 20 unique corporate and community events, my work has been instrumental in helping clients elevate their brand identity and preserve significant moments, reinforcing my expertise in client relations, project management, and digital storytelling." 
+            }
+        ],
+        button: { text: "Visit Studio Website", link: "#" }
+    },
+    { 
+        organization: "Sasnaka Sansada Foundation", 
+        orgLink: "https://www.linkedin.com/company/sasnaka/posts/?feedView=all", 
+        image: "https://res.cloudinary.com/dn8u15evb/image/upload/v1757262059/work-sasnaka-bg_p7wrlj.jpg", 
+        logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>`,
+        roles: [ 
+            { 
+                role: "Co-Head, Photography Division", 
+                period: "Apr 2024 - Present", 
+                description: "In my leadership capacity, I co-spearhead the strategic planning and operational execution for all photographic content across the foundation's large-scale national events. This involves mentoring and coordinating a team of volunteer photographers, managing a comprehensive inventory of equipment, and developing content briefs that ensure every visual asset is powerful, on-brand, and effectively communicates the organization's core mission. My role is crucial in translating the foundation's impact into compelling visual narratives for stakeholders and the public." 
+            }, 
+            { 
+                role: "Member, Ganitha Saviya Project", 
+                period: "Jan 2024 - Present", 
+                description: "As a dedicated member of the 'Ganitha Saviya' educational initiative, I actively contribute to bridging educational gaps by teaching O/L level mathematics to students in underserved communities. My involvement extends beyond the classroom to include the development of customized supplementary learning materials and innovative lesson plans designed to make complex concepts accessible and engaging. By fostering a supportive learning environment, I help prepare students for their national examinations and aim to inspire a lasting confidence in their academic abilities." 
+            } 
+        ] 
+    },
+    { 
+        organization: "IEEE Student Branch of SUSL", 
+        orgLink: "#", 
+        image: "https://res.cloudinary.com/dn8u15evb/image/upload/v1757262055/work-ieee-bg_qmvd61.jpg", 
+        logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M15.75 3v1.5M12 4.5v15M15.75 21v-1.5" /></svg>`,
+        roles: [ 
+            { 
+                role: "Committee Member & Faculty Coordinator", 
+                period: "Sept 2024 - Present", 
+                description: "Serving as the primary liaison for the 22/23 computing faculty batch, my core mission is to cultivate a vibrant and engaged student community within the IEEE. I proactively drive participation in key initiatives by recruiting, training, and managing a team of student volunteers. Through strategic promotion across digital channels and direct outreach, I have successfully increased attendance at technical workshops and sessions, fostering a collaborative environment that connects students with valuable learning opportunities and professional networks." 
+            } 
+        ] 
+    },
+    { 
+        organization: "Sundara Belihuloya Media Crew", 
+        orgLink: "https://www.facebook.com/share/177kLXS5wz/", 
+        image: "https://res.cloudinary.com/dn8u15evb/image/upload/v1757262057/work-sb-bg_cuv7qv.jpg", 
+        logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048l5.962-5.962a.75.75 0 011.06 0l2.298 2.298a.75.75 0 010 1.06l-5.962 5.962A8.252 8.252 0 0112 21z" /></svg>`,
+        roles: [ 
+            { 
+                role: "Photographer & Batch Coordinator", 
+                period: "July 2025 - Present", 
+                description: "In my dual role, I lead media coordination for the 22/23 batch while also serving as a lead photographer for the Sundara Belihuloya Media Crew. I am responsible for aligning our team's content strategy with the university's official event calendar, ensuring comprehensive and professional coverage. To date, I have personally photographed over five major campus events, from academic conferences to cultural festivals. My work focuses on delivering high-quality visual stories that capture the dynamic spirit of our university, providing key assets for official publications, social media, and archival purposes." 
+            } 
+        ] 
+    }
+];
 
             return (
                 <section id="experience" className="py-20 bg-brand-surface text-brand-text-dark">
