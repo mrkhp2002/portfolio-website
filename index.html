@@ -169,7 +169,7 @@
                             <div className="flex justify-center">
                                 <div className="relative w-80 h-80">
                                     <div className="absolute inset-0 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-full blur-2xl opacity-50"></div>
-                                    <img src="images/profile-photo.jpg"alt="Kanchana Piyasekara" className="relative w-full h-full object-cover rounded-full shadow-2xl border-4 border-gray-700"/>
+                                    <img src="/images/profile-photo.jpg"alt="Kanchana Piyasekara" className="relative w-full h-full object-cover rounded-full shadow-2xl border-4 border-gray-700"/>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +184,7 @@
         <section 
             id="about" 
             className="py-20 bg-cover bg-center relative" 
-            style={{ backgroundImage: "url('images/about-bg.jpg')" }} // Added url('') for standard CSS
+            style={{ backgroundImage: "url('/images/about-bg.jpg')" }} // Added url('') for standard CSS
         >
             <div className="absolute inset-0 bg-brand-bg/80 backdrop-blur-sm"></div>
             <AnimatedSection>
@@ -193,7 +193,7 @@
                         <div className="md:col-span-2">
                             {/* --- THIS IS THE MODIFIED LINE --- */}
                             <img 
-                                src="images/about-photo.jpg" 
+                                src="/images/about-photo.jpg" 
                                 alt="Kanchana Piyasekara" 
                                 className="rounded-lg shadow-lg w-80 h-80 object-cover mx-auto"
                             />
@@ -215,19 +215,19 @@ function Education() {
             school: 'Kegalu Vidyalaya', 
             period: 'Class of 2021', 
             description: 'Excelled in the G.C.E. Advanced Level curriculum, specializing in the Physical Science stream. Mastered core principles of Combined Mathematics, Physics, and Chemistry, which honed my quantitative reasoning and systematic problem-solving abilities, laying the groundwork for my degree in Computing.',
-            logo: 'images/kv-school.jpg'
+            logo: '/images/kv-school.jpg'
         },
         { 
             school: 'Ruwanwella Royal Collage', 
             period: 'Class of 2018', 
             description: 'Completed my G.C.E. Ordinary Level education while actively engaging in leadership roles. As Secretary of the Science Society, I organized the annual science fair, coordinating student teams and faculty, which was pivotal in developing my communication and project planning skills.',
-            logo: 'images/rcc-school.jpg'
+            logo: '/images/rcc-school.jpg'
         },
         { 
             school: 'N.M Perera Central Collage', 
             period: 'Class of 2010', 
             description: 'Developed a strong academic foundation where early engagement with school media projects and IT coursework first sparked my interest in digital creativity and logical thinking, a passion that has guided my academic and professional journey ever since.',
-            logo: 'images/nm-school.jpg'
+            logo: '/images/nm-school.jpg'
         },
     ];
 
@@ -306,7 +306,7 @@ function Education() {
                 { 
                     organization: "KHP Photography", 
                     orgLink: "#", // Dummy link for the studio website
-                    image: "images/work-khp-bg.jpg",
+                    image: "/images/work-khp-bg.jpg",
                     logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.776 48.776 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" /></svg>`,
                     roles: [ 
                         { role: "Owner & Lead Photographer", period: "2022 - Present", description: "Established and currently direct all operations for KHP Photography, a client-focused studio dedicated to capturing high-impact moments. I manage the entire project lifecycle, from initial client consultation and concept development to on-site execution and post-production editing. My work, spanning over 20 unique events, has helped clients build their brand and preserve important memories." }
@@ -316,7 +316,7 @@ function Education() {
                 { 
                     organization: "Sasnaka Sansada Foundation", 
                     orgLink: "https://www.linkedin.com/company/sasnaka/posts/?feedView=all", 
-                    image: "images/work-sasnaka-bg.jpg", 
+                    image: "/images/work-sasnaka-bg.jpg", 
                     logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>`,
                     roles: [ 
                         { role: "Co-Head Photography Division", period: "Apr 2024 - Present", description: "I co-lead the strategic direction and execution of all photographic content for the foundation's nationwide events. My responsibilities include team coordination, equipment management, and ensuring the final visual assets align with the organization's mission and communication goals." }, 
@@ -326,7 +326,7 @@ function Education() {
                 { 
                     organization: "IEEE Student Branch of SUSL", 
                     orgLink: "#", 
-                    image: "images/work-ieee-bg.jpg", 
+                    image: "/images/work-ieee-bg.jpg", 
                     logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M15.75 3v1.5M12 4.5v15M15.75 21v-1.5" /></svg>`,
                     roles: [ 
                         { role: "Committee Member & Faculty Coordinator", period: "Sept 2024 - Present", description: "As the key liaison for the 22/23 computing faculty batch, I drive student engagement in IEEE initiatives. My role involves actively recruiting and managing volunteers, promoting workshops and technical sessions through various channels, and fostering a collaborative community to maximize participation." } 
@@ -335,7 +335,7 @@ function Education() {
                 { 
                     organization: "Sundara Belihuloya Media Crew", 
                     orgLink: "https://www.facebook.com/share/177kLXS5wz/", 
-                    image: "images/work-sb-bg.jpg", 
+                    image: "/images/work-sb-bg.jpg", 
                     logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048l5.962-5.962a.75.75 0 011.06 0l2.298 2.298a.75.75 0 010 1.06l-5.962 5.962A8.252 8.252 0 0112 21z" /></svg>`,
                     roles: [ 
                         { role: "Photographer & Batch Coordinator", period: "July 2025 - Present", description: "I lead the coordination for the 22/23 batch media team, aligning our content strategy with university-wide events. In my role as a photographer, I have covered more than five significant campus events, delivering high-quality visual stories that capture the spirit of our university for official publications and social media." } 
