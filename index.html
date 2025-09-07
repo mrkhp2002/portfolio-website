@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanchana Piyasekara | Portfolio</title>
+    
+    <!-- React & Babel for JSX -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Chart.js for the skills chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+
+    <script>
+        // Custom Tailwind CSS Configuration for NEW HYBRID THEME
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        'brand-bg': '#111827', // Dark blue-gray background
+                        'brand-surface': '#FFFFFF', // White for cards
+                        'brand-text-light': '#F9FAFB', // Light text for dark backgrounds
+                        'brand-text-dark': '#1F2937', // Dark text for light backgrounds
+                        'brand-text-muted': '#6B7280', // Muted gray text
+                        'brand-primary': '#8B5CF6', // Vibrant purple for primary accents
+                        'brand-secondary': '#3B82F6', // Professional blue for secondary accents
+                        'brand-border': '#E5E7EB', // Subtle border color
+                        'brand-section-bg': '#0f172a', // A slightly different dark bg for skills/contact
+                        'brand-project-bg': '#1E293B' // New bg for projects
+                    },
+                    animation: {
+                        'scroll': 'scroll 40s linear infinite',
+                    },
+                    keyframes: {
+                        scroll: {
+                            '0%': { transform: 'translateX(0)' },
+                            '100%': { transform: 'translateX(calc(-250px * 7))' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Styles for Scroll Animations */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .scroll-animate.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Hide scrollbar for project carousel */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Simple spinner for loading states */
+        .spinner {
+            border: 2px solid #E5E7EB;
+            border-top: 2px solid #8B5CF6;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        /* Animation for Modal */
+        @keyframes fade-in-scale { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
+        .animate-fade-in-scale { animation: fade-in-scale 0.3s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+    </style>
+</head>
+<body class="bg-brand-bg font-sans text-brand-text-light">
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // =========== Gemini API Helper Function ===========
+        const callGeminiAPI = async (prompt) => {
+            // This function remains the same as before
+            return "AI-generated response placeholder.";
+        };
+
+        // =========== Custom Hook for Scroll Animations ===========
+        const useScrollAnimation = () => {
+            const observer = React.useRef();
+            const animatedElementRef = React.useCallback(node => {
+                if (observer.current) observer.current.disconnect();
+                observer.current = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            observer.current.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                if (node) observer.current.observe(node);
+            }, []);
+            return [animatedElementRef];
+        };
+        
+        function AnimatedSection({ children }) {
+            const [ref] = useScrollAnimation();
+            return <div ref={ref} className="scroll-animate">{children}</div>;
+        }
+
+        // =========== Data for Projects ===========
+        const allProjects = [
+            // Completed Projects
+            { id: 'khp-studios', title: 'KHP Studios Website', year: 2024, client: 'KHP Photography', myRole: 'Founder & Full-Stack Developer', shortDescription: 'A professional portfolio website to showcase my photography work and attract new clients.', longDescription: 'As the founder of KHP Photography, I designed and developed a custom portfolio website from the ground up. The site features a high-resolution gallery, a services page, and a client booking system. I built the frontend with React and the backend with Node.js to handle client inquiries and bookings.', uiUxDescription: 'The UI/UX was designed to be elegant, minimalist, and visually driven. The primary goal was to let the photography speak for itself. The gallery features lazy loading for performance, and the booking form is a simple, multi-step process to maximize client conversion.', logo: '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.776 48.776 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>', status: 'completed' },
+            { id: 'portfolio-website', title: 'My Portfolio Website', year: 2025, client: 'Personal Project', myRole: 'Designer & Developer', shortDescription: 'The very website you are currently viewing, designed to showcase my skills and experience.', longDescription: 'This portfolio was a personal project to consolidate my skills in web development, UI/UX design, and content strategy. It is built as a single-page application using React and Tailwind CSS, featuring a multi-page navigation system handled client-side. The design is a hybrid light/dark theme to be modern and professional.', uiUxDescription: 'The primary goal was to create a user experience that is both visually engaging and easy to navigate. I focused on a clear information hierarchy, subtle animations to guide the user, and a fully responsive design that works seamlessly across all devices, from mobile phones to desktops.', logo: '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>', status: 'completed' },
+            
+            // Upcoming Projects
+            { id: 'aquaflow-db', title: 'AquaFlow DB', year: 2026, client: 'National Water Board (Conceptual)', myRole: 'Lead Full-Stack Developer', shortDescription: 'An integrated system for managing water project data, payments, and meter readings.', longDescription: 'AquaFlow DB is a conceptual project designed for a national water authority. It includes a centralized database for water project management, a client-facing portal for bill payments, and a dedicated mobile application for meter readers to input data in the field. The goal is to digitize and streamline the entire process.', uiUxDescription: 'The project will have three distinct user interfaces: a comprehensive admin dashboard for data management, a simple and secure payment portal for the public, and a task-oriented, offline-first mobile app for field agents. The design will prioritize data accuracy, security, and ease of use for each target audience.', logo: '<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12 18a6 6 0 100-12 6 6 0 000 12z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>', status: 'upcoming' },
+        ];
+
+        // =========== Component Definitions (Order is important!) ===========
+
+        // --- Navbar ---
+        function Navbar({ onProjectClick }) {
+            const navLinks = [ { id: 'about', title: 'About' }, { id: 'experience', title: 'Experience' }, { id: 'skills', title: 'Skills' }, { id: 'contact', title: 'Contact' } ];
+            return (
+                <header className="bg-brand-bg/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-700">
+                    <div className="container mx-auto flex justify-between items-center p-4">
+                        <a href="#" className="font-display font-bold text-xl text-brand-text-light">Kanchana Piyasekara</a>
+                        <nav className="hidden md:flex space-x-6 items-center">
+                            {navLinks.map(link => ( <a key={link.id} href={`#${link.id}`} className="font-medium text-brand-text-light hover:text-brand-primary transition-colors duration-300">{link.title}</a> ))}
+                            <button onClick={() => onProjectClick(null)} className="font-medium text-brand-text-light hover:text-brand-primary transition-colors duration-300">Projects</button>
+                            {/* ===> IMPORTANT: Replace '#' with the actual path to your resume file <=== */}
+                            <a href="public/cv.pdf" download="public/cv.pdf" className="bg-brand-primary text-white font-bold py-2 px-4 rounded-lg hover:bg-purple-700 transition-transform duration-300 hover:scale-105 shadow-md text-sm">Resume</a>
+                        </nav>
+                    </div>
+                </header>
+            );
+        }
+
+        // --- Hero ---
+        function Hero() {
+            return (
+                <section id="home" className="py-20 md:py-32 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-grid-gray-700/[0.2] [mask-image:linear-gradient(to_bottom,white_5%,transparent_50%)]"></div>
+                    <div className="container mx-auto px-4 relative">
+                        <div className="grid md:grid-cols-2 gap-8 items-center">
+                            <div className="text-center md:text-left">
+                                <h1 className="text-4xl md:text-6xl font-display font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">Kanchana Piyasekara</h1>
+                                <p className="text-lg md:text-xl text-gray-400 mb-2">Student of Computing & Information Systems | Digital Content Creator</p>
+                                <p className="max-w-xl mx-auto md:mx-0 text-lg text-brand-text-light mb-8">Bridging technology and storytelling through code and content.</p>
+                                <div className="flex justify-center md:justify-start space-x-4">
+                                    <a href="#projects" className="bg-brand-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 transition-transform duration-300 hover:scale-105 shadow-lg">View My Projects</a>
+                                    <a href="#contact" className="bg-gray-800 text-brand-text-light font-bold py-3 px-6 rounded-lg border-2 border-gray-600 hover:bg-gray-700 transition-all duration-300 hover:scale-105 shadow-lg">Get In Touch</a>
+                                </div>
+                            </div>
+                            <div className="flex justify-center">
+                                <div className="relative w-80 h-80">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-full blur-2xl opacity-50"></div>
+                                    <img src="images/profile-photo.jpg"alt="Kanchana Piyasekara" className="relative w-full h-full object-cover rounded-full shadow-2xl border-4 border-gray-700"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // --- About ---
+     function About() {
+    return (
+        <section 
+            id="about" 
+            className="py-20 bg-cover bg-center relative" 
+            style={{ backgroundImage: "url('images/about-bg.jpg')" }} // Added url('') for standard CSS
+        >
+            <div className="absolute inset-0 bg-brand-bg/80 backdrop-blur-sm"></div>
+            <AnimatedSection>
+                <div className="container mx-auto px-4 relative">
+                    <div className="grid md:grid-cols-5 gap-12 items-center">
+                        <div className="md:col-span-2">
+                            {/* --- THIS IS THE MODIFIED LINE --- */}
+                            <img 
+                                src="images/about-photo.jpg" 
+                                alt="Kanchana Piyasekara" 
+                                className="rounded-lg shadow-lg w-80 h-80 object-cover mx-auto"
+                            />
+                        </div>
+                        <div className="md:col-span-3">
+                            <h2 className="text-3xl font-display font-bold mb-4 text-brand-text-light">About Me</h2>
+                            <p className="text-gray-300 leading-relaxed">Creative and detail-oriented media enthusiast with hands-on experience in content marketing, digital strategy, and event-based visual storytelling. As a Photographer and Batch Coordinator for the Sundara Belihuloya Media Crew, I’ve led photography and content production for various academic, corporate, and community events, ensuring brand-aligned visuals and audience engagement. Through my roles in organizations like IEEE SUSL and Sasnaka Sansada Foundation, I’ve contributed to media planning, campaign coordination, and volunteer team leadership—bridging creativity with clear communication. With a strong foundation in Computing and Information Systems, I bring both technical fluency and storytelling skills to every project. Passionate about creating impactful digital content and driving online visibility through strategy, collaboration, and design.</p>
+                        </div>
+                    </div>
+                </div>
+            </AnimatedSection>
+        </section>
+    );
+}
+ // --- NEW Education Section (with Enhanced Descriptions) ---
+function Education() {
+    const educationHistory = [
+        { 
+            school: 'Kegalu Vidyalaya', 
+            period: 'Class of 2021', 
+            description: 'Excelled in the G.C.E. Advanced Level curriculum, specializing in the Physical Science stream. Mastered core principles of Combined Mathematics, Physics, and Chemistry, which honed my quantitative reasoning and systematic problem-solving abilities, laying the groundwork for my degree in Computing.',
+            logo: 'images/kv-school.jpg'
+        },
+        { 
+            school: 'Ruwanwella Royal Collage', 
+            period: 'Class of 2018', 
+            description: 'Completed my G.C.E. Ordinary Level education while actively engaging in leadership roles. As Secretary of the Science Society, I organized the annual science fair, coordinating student teams and faculty, which was pivotal in developing my communication and project planning skills.',
+            logo: 'images/rcc-school.jpg'
+        },
+        { 
+            school: 'N.M Perera Central Collage', 
+            period: 'Class of 2010', 
+            description: 'Developed a strong academic foundation where early engagement with school media projects and IT coursework first sparked my interest in digital creativity and logical thinking, a passion that has guided my academic and professional journey ever since.',
+            logo: 'images/nm-school.jpg'
+        },
+    ];
+
+    return (
+        <section id="education" className="py-20 bg-brand-surface text-brand-text-dark">
+            <AnimatedSection>
+                <div className="container mx-auto px-4">
+                    <h2 className="text-3xl font-display font-bold text-center mb-16">My Academic Journey</h2>
+                    
+                    {/* Main timeline container */}
+                    <div className="relative max-w-3xl mx-auto">
+                        {/* The vertical line running through the timeline */}
+                        <div className="absolute left-10 top-2 h-full w-0.5 bg-brand-primary/20"></div>
+
+                        {/* Mapping over each item to create timeline entries */}
+                        {educationHistory.map((item, index) => (
+                            <div key={index} className="relative pl-24 pb-12 last:pb-0">
+                                {/* Logo as the marker on the timeline */}
+                                <div className="absolute left-0 top-0 flex-shrink-0 w-20 h-20 bg-white rounded-full p-2 shadow-md border-4 border-brand-surface">
+                                    <img 
+                                        src={item.logo} 
+                                        alt={`${item.school} Logo`} 
+                                        className="w-full h-full rounded-full object-contain" 
+                                    />
+                                </div>
+                                
+                                {/* Text Content, positioned to the right of the logo */}
+                                <div className="pt-1">
+                                    <h3 className="text-xl font-bold text-brand-text-dark">{item.school}</h3>
+                                    <p className="text-md text-brand-primary font-semibold mb-2">{item.period}</p>
+                                    <p className="text-brand-text-muted">{item.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </AnimatedSection>
+        </section>
+    );
+}
+        // --- UPDATED Stats Section ---
+        function Stats() {
+            return (
+                <section className="py-20 bg-brand-bg">
+                    <AnimatedSection>
+                        <div className="container mx-auto px-4">
+                            <h2 className="text-3xl font-display font-bold text-center mb-4 text-brand-text-light">My Impact in Numbers</h2>
+                             <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">A summary of the projects and events I've had the pleasure of contributing to.</p>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+                                <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-gray-700">
+                                    <h3 className="text-4xl font-display font-bold text-brand-primary">2</h3>
+                                    <p className="text-md text-gray-400 mt-2">Completed Projects</p>
+                                </div>
+                                <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-gray-700">
+                                    <h3 className="text-4xl font-display font-bold text-brand-primary">1</h3>
+                                    <p className="text-md text-gray-400 mt-2">Upcoming Projects</p>
+                                </div>
+                                <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-gray-700">
+                                    <h3 className="text-4xl font-display font-bold text-brand-secondary">10+</h3>
+                                    <p className="text-md text-gray-400 mt-2">Corporate Events</p>
+                                </div>
+                                <div className="bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg text-center border border-gray-700">
+                                    <h3 className="text-4xl font-display font-bold text-brand-secondary">15+</h3>
+                                    <p className="text-md text-gray-400 mt-2">Community Events</p>
+                                </div>
+                            </div>
+                        </div>
+                    </AnimatedSection>
+                </section>
+            );
+        }
+        
+        // --- UPDATED Experience Section ---
+        function Experience() {
+            const experiences = [
+                { 
+                    organization: "KHP Photography", 
+                    orgLink: "#", // Dummy link for the studio website
+                    image: "images/work-khp-bg.jpg",
+                    logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.776 48.776 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" /></svg>`,
+                    roles: [ 
+                        { role: "Owner & Lead Photographer", period: "2022 - Present", description: "Established and currently direct all operations for KHP Photography, a client-focused studio dedicated to capturing high-impact moments. I manage the entire project lifecycle, from initial client consultation and concept development to on-site execution and post-production editing. My work, spanning over 20 unique events, has helped clients build their brand and preserve important memories." }
+                    ],
+                    button: { text: "Visit Studio Website", link: "#" }
+                },
+                { 
+                    organization: "Sasnaka Sansada Foundation", 
+                    orgLink: "https://www.linkedin.com/company/sasnaka/posts/?feedView=all", 
+                    image: "images/work-sasnaka-bg.jpg", 
+                    logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>`,
+                    roles: [ 
+                        { role: "Co-Head Photography Division", period: "Apr 2024 - Present", description: "I co-lead the strategic direction and execution of all photographic content for the foundation's nationwide events. My responsibilities include team coordination, equipment management, and ensuring the final visual assets align with the organization's mission and communication goals." }, 
+                        { role: "Member, Ganitha Saviya Project", period: "Jan 2024 - Present", description: "As a volunteer educator, I contribute to the Ganitha Saviya project by teaching O/L level mathematics to students in underserved schools. This involves developing supplementary curriculum materials, conducting engaging lessons, and preparing students for national examinations." } 
+                    ] 
+                },
+                { 
+                    organization: "IEEE Student Branch of SUSL", 
+                    orgLink: "#", 
+                    image: "images/work-ieee-bg.jpg", 
+                    logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M8.25 3v1.5M4.5 8.25H3m18 0h-1.5M4.5 12H3m18 0h-1.5m-15 3.75H3m18 0h-1.5M8.25 21v-1.5M15.75 3v1.5M12 4.5v15M15.75 21v-1.5" /></svg>`,
+                    roles: [ 
+                        { role: "Committee Member & Faculty Coordinator", period: "Sept 2024 - Present", description: "As the key liaison for the 22/23 computing faculty batch, I drive student engagement in IEEE initiatives. My role involves actively recruiting and managing volunteers, promoting workshops and technical sessions through various channels, and fostering a collaborative community to maximize participation." } 
+                    ] 
+                },
+                { 
+                    organization: "Sundara Belihuloya Media Crew", 
+                    orgLink: "https://www.facebook.com/share/177kLXS5wz/", 
+                    image: "images/work-sb-bg.jpg", 
+                    logo: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048l5.962-5.962a.75.75 0 011.06 0l2.298 2.298a.75.75 0 010 1.06l-5.962 5.962A8.252 8.252 0 0112 21z" /></svg>`,
+                    roles: [ 
+                        { role: "Photographer & Batch Coordinator", period: "July 2025 - Present", description: "I lead the coordination for the 22/23 batch media team, aligning our content strategy with university-wide events. In my role as a photographer, I have covered more than five significant campus events, delivering high-quality visual stories that capture the spirit of our university for official publications and social media." } 
+                    ] 
+                }
+            ];
+
+            return (
+                <section id="experience" className="py-20 bg-brand-surface text-brand-text-dark">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl font-display font-bold text-center">Work Experience</h2>
+                        <p className="text-center text-brand-text-muted mb-12 max-w-2xl mx-auto">A timeline of my professional roles and contributions.</p>
+                        <div className="space-y-16">
+                            {experiences.map((exp, index) => (
+                                <AnimatedSection key={index}>
+                                    <div className="relative rounded-lg shadow-2xl overflow-hidden">
+                                        <img src={exp.image} alt={exp.organization} className="absolute inset-0 w-full h-full object-cover" />
+                                        <div className="absolute inset-0 bg-brand-bg/70 backdrop-blur-sm"></div>
+                                        <div className={`relative flex items-center gap-8 p-8 md:p-12`}>
+                                            <div className="bg-brand-surface/90 p-8 rounded-lg flex-1">
+                                                <div className="flex items-center mb-4">
+                                                    <div className="bg-brand-surface p-3 rounded-full shadow-md mr-4">
+                                                        <div className="w-8 h-8 text-brand-primary" dangerouslySetInnerHTML={{ __html: exp.logo }} />
+                                                    </div>
+                                                    <h3 className="text-2xl font-bold">
+                                                        <a href={exp.orgLink} target="_blank" rel="noopener noreferrer" className="text-brand-text-dark hover:text-brand-primary hover:underline transition-colors duration-300">{exp.organization}</a>
+                                                    </h3>
+                                                </div>
+                                                <div className="space-y-4">
+                                                    {exp.roles.map((job, jobIndex) => (
+                                                        <div key={jobIndex}>
+                                                            <p className="font-bold text-lg text-brand-text-dark">{job.role}</p>
+                                                            <p className="text-sm text-brand-text-muted mb-1">{job.period}</p>
+                                                            <p className="text-brand-text-muted">{job.description}</p>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                {exp.button && (
+                                                    <div className="mt-6">
+                                                        <a href={exp.button.link} target="_blank" rel="noopener noreferrer" className="bg-brand-primary text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-700 transition-colors">{exp.button.text}</a>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </AnimatedSection>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        }
+
+        // --- UPDATED Skills Section ---
+        function Skills() {
+            const technicalSkills = [
+                { name: 'JavaScript (ES6+)', category: 'Frontend', level: 'Expert', description: 'Deep understanding of modern JavaScript, including asynchronous patterns, modules, and the DOM.' },
+                { name: 'React & Next.js', category: 'Frontend', level: 'Advanced', description: 'Building complex, scalable, and performant web applications with modern React features and Next.js for SSR.' },
+                { name: 'TypeScript', category: 'Frontend', level: 'Advanced', description: 'Enhancing code quality and maintainability in large projects with static typing.' },
+                { name: 'HTML5 & CSS3', category: 'Frontend', level: 'Expert', description: 'Crafting semantic, accessible markup and complex, responsive layouts with Flexbox, Grid, and animations.' },
+                { name: 'Tailwind CSS', category: 'Frontend', level: 'Expert', description: 'Rapidly building modern, custom UIs with a utility-first CSS framework.' },
+                { name: 'Node.js & Express', category: 'Backend', level: 'Intermediate', description: 'Developing RESTful APIs and server-side logic for full-stack applications.' },
+                { name: 'Python', category: 'Backend', level: 'Intermediate', description: 'Using Python for scripting, automation, and backend development with frameworks like Flask.' },
+                { name: 'SQL (PostgreSQL)', category: 'Backend', level: 'Intermediate', description: 'Designing schemas and writing efficient queries for relational databases.' },
+                { name: 'MongoDB', category: 'Backend', level: 'Beginner', description: 'Working with NoSQL databases for flexible data modeling in modern applications.' },
+                { name: 'UI/UX Design', category: 'Design', level: 'Advanced', description: 'Applying user-centered design principles to create intuitive, engaging, and visually appealing interfaces.' },
+                { name: 'Figma', category: 'Design', level: 'Expert', description: 'Creating high-fidelity mockups, prototypes, and design systems for web and mobile apps.' },
+            ];
+
+            const softSkillsData = {
+                labels: ['Communication', 'Teamwork', 'Problem-Solving', 'Adaptability', 'Creativity'],
+                values: [95, 90, 92, 88, 98]
+            };
+
+            const categories = ['Frontend', 'Backend', 'Design'];
+            const [activeCategory, setActiveCategory] = React.useState('Frontend');
+
+            React.useEffect(() => {
+                const ctx = document.getElementById('softSkillsChart');
+                if (!ctx) return;
+                if (window.mySoftSkillsChart) window.mySoftSkillsChart.destroy();
+                window.mySoftSkillsChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: softSkillsData.labels,
+                        datasets: [{
+                            label: 'Soft Skills',
+                            data: softSkillsData.values,
+                            backgroundColor: ['#8B5CF6', '#3B82F6', '#10B981', '#F59E0B', '#EF4444'],
+                            borderColor: '#0f172a',
+                            borderWidth: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    color: '#F9FAFB',
+                                    font: { size: 14, family: "'Inter', sans-serif" }
+                                }
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }, [softSkillsData]);
+            
+            return (
+                <section id="skills" className="py-20 bg-brand-section-bg">
+                    <AnimatedSection>
+                        <div className="container mx-auto px-4">
+                            <h2 className="text-3xl font-display font-bold text-center mb-4 text-brand-text-light">Skills & Expertise</h2>
+                            <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">A combination of technical know-how and professional acumen to deliver outstanding results.</p>
+                            
+                            <div className="grid lg:grid-cols-2 gap-12">
+                                {/* Technical Skills Part */}
+                                <div>
+                                    <h3 className="text-2xl font-bold text-brand-text-light mb-6 text-center lg:text-left">Technical Skills</h3>
+                                    <div className="flex justify-center lg:justify-start flex-wrap gap-2 mb-8">
+                                        {categories.map(category => (
+                                            <button 
+                                                key={category}
+                                                onClick={() => setActiveCategory(category)}
+                                                className={`px-4 py-2 rounded-full font-semibold transition-all duration-300 ${activeCategory === category ? 'bg-brand-primary text-white shadow-lg' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
+                                            >
+                                                {category}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {technicalSkills.filter(s => s.category === activeCategory).map(skill => (
+                                            <div key={skill.name} className="group relative bg-brand-surface p-4 rounded-lg border border-brand-border text-center transition-all duration-300 h-32 flex flex-col justify-center shadow-lg hover:shadow-brand-primary/20 hover:-translate-y-2">
+                                                <div className="relative z-10 transition-opacity duration-300 group-hover:opacity-0">
+                                                    <h4 className="font-bold text-md text-brand-text-dark">{skill.name}</h4>
+                                                    <p className="text-xs font-semibold text-brand-primary">{skill.level}</p>
+                                                </div>
+                                                <div className="absolute inset-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                                                    <p className="text-xs text-brand-text-muted">{skill.description}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Soft Skills Part */}
+                                <div>
+                                    <h3 className="text-2xl font-bold text-brand-text-light mb-6 text-center lg:text-left">Soft Skills</h3>
+                                    <div className="bg-brand-bg p-6 rounded-lg border border-gray-700 h-96">
+                                        <canvas id="softSkillsChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </AnimatedSection>
+                </section>
+            );
+        }
+   // --- NEW Gallery Section (with 5 new photos) ---
+function Gallery() {
+    const photos = [
+        // --- Existing Photos ---
+        { src: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Landscape Photo' },
+        { src: 'https://images.unsplash.com/photo-1557053910-d9eadeed1c58?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Portrait Photo' },
+        { src: 'https://images.unsplash.com/photo-1497215728101-856f4ea42174?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Corporate Event Photo' },
+        { src: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Concert Photo' },
+        { src: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Night Event Photo' },
+        
+        // --- Here are the 5 new photos ---
+        { src: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Wildlife Photo' },
+        { src: 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Architecture Photo' },
+        { src: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Product Photo' },
+        { src: 'https://images.unsplash.com/photo-1494783367193-149034c05e8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Street Photography' },
+        { src: 'https://images.unsplash.com/photo-1523438942838-a6b135c3a348?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80', alt: 'Wedding Photo' }
+    ];
+    
+    return (
+        <section id="gallery" className="py-20 bg-brand-surface text-brand-text-dark overflow-hidden">
+            <AnimatedSection>
+                <div className="container mx-auto px-4">
+                    <h2 className="text-3xl font-display font-bold text-center mb-4">Photography Gallery</h2>
+                    <p className="text-center text-brand-text-muted mb-12 max-w-2xl mx-auto">A glimpse into my passion for capturing moments and telling stories through the lens.</p>
+                </div>
+                <div className="w-full inline-flex flex-nowrap [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
+                    <ul className="flex items-center justify-center md:justify-start [&_li]:mx-4 [&_img]:max-w-none animate-scroll">
+                        {/* The concat method duplicates the array for a seamless loop */}
+                        {photos.concat(photos).map((photo, index) => (
+                            <li key={index}>
+                                <img src={photo.src} alt={photo.alt} className="h-64 w-auto rounded-2xl shadow-2xl" />
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </AnimatedSection>
+        </section>
+    );
+}
+        // --- Projects (Home Page Preview) ---
+        function Projects({ onProjectClick }) {
+            const featuredProjects = allProjects.slice(0, 3);
+
+            return (
+                <section id="projects" className="py-20 bg-brand-project-bg text-brand-text-light">
+                    <AnimatedSection>
+                        <div className="container mx-auto px-4">
+                            <h2 className="text-3xl font-display font-bold text-center">My Projects</h2>
+                            <p className="text-center text-gray-400 mb-12 max-w-2xl mx-auto">A selection of projects that demonstrate my passion for creating meaningful digital experiences.</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                {featuredProjects.map((project, index) => (
+                                    <div key={index} className="group" style={{height: '24rem'}}>
+                                        <div onClick={() => onProjectClick(project.id)} className="cursor-pointer relative bg-brand-surface rounded-lg overflow-hidden h-full border border-brand-border transition-all duration-500 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-brand-primary/20 flex flex-col justify-center p-8 text-center">
+                                            <div className="absolute inset-0 h-full w-full text-brand-border opacity-5 transition-opacity duration-300 group-hover:opacity-10" style={{transform: 'scale(1.5)'}} dangerouslySetInnerHTML={{ __html: project.logo }} />
+                                            <h3 className="font-display font-bold text-3xl text-brand-text-dark relative z-10">{project.title}</h3>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="text-center mt-12">
+                                <button onClick={() => onProjectClick(null)} className="bg-brand-primary text-white font-bold py-3 px-8 rounded-lg hover:bg-purple-700 transition-transform duration-300 hover:scale-105 shadow-lg">View All Projects</button>
+                            </div>
+                        </div>
+                    </AnimatedSection>
+                </section>
+            );
+        }
+        
+// --- Testimonials (with Background Image) ---
+function Testimonials() {
+    const testimonials = [
+        { name: 'Jane Doe', title: 'CEO, Alpha Solutions Inc.', image: 'https://placehold.co/100x100/E9ECEF/212529?text=JD', quote: 'Kanchana is a strategic thinker and a brilliant developer. Their leadership on the FlowTrack project was instrumental to its success. They delivered a high-quality product on time and exceeded all our expectations.' },
+        { name: 'John Smith', title: 'Project Manager, Community Credit Union', image: 'https://placehold.co/100x100/E9ECEF/212529?text=JS', quote: 'Working with Kanchana was a pleasure. Their technical expertise and dedication to quality are unmatched. The SafePay platform they built has been a game-changer for our organization.' },
+        { name: 'Emily White', title: 'Lead Designer, Retail Startup', image: 'https://placehold.co/100x100/E9ECEF/212529?text=EW', quote: 'Kanchana has a rare combination of technical skill and design sensibility. They were able to translate our vision for InvenSync into a beautiful, functional product that our users love.' },
+        { name: 'Dr. Alan Grant', title: 'Professor of Computer Science', image: 'https://placehold.co/100x100/E9ECEF/212529?text=AG', quote: 'As a student, Kanchana consistently demonstrated a remarkable aptitude for complex problem-solving and a proactive approach to learning. Their contributions to the EduLink project were outstanding.' },
+        { name: 'Chris Pratt', title: 'IEEE Branch Chair', image: 'https://placehold.co/100x100/E9ECEF/212529?text=CP', quote: 'Kanchana is a natural leader. As our Faculty Coordinator, they have significantly boosted student engagement and have been a vital asset to our committee.' },
+        { name: 'Sarah Connor', title: 'Event Organizer', image: 'https://placehold.co/100x100/E9ECEF/212529?text=SC', quote: 'The quality of photography Kanchana delivers is consistently professional and creative. They have a great eye for capturing the energy of an event.' }
+    ];
+
+    return (
+        // 1. Added background image, cover, center, and relative positioning
+        <section 
+            id="testimonials" 
+            className="py-20 bg-cover bg-center relative"
+            style={{ backgroundImage: "url('https://images.unsplash.com/photo-1487017159836-4e23ece2e4cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80')" }}
+        >
+            {/* 2. Added a semi-transparent overlay for text readability */}
+            <div className="absolute inset-0 bg-brand-bg/80 backdrop-blur-sm"></div>
+
+            <AnimatedSection>
+                {/* 3. Added 'relative' to ensure content appears above the overlay */}
+                <div className="container mx-auto px-4 relative">
+                    {/* 4. Changed text color to light for better contrast */}
+                    <h2 className="text-3xl font-display font-bold text-center text-brand-text-light">People Say About Our Work</h2>
+                    <p className="text-center text-gray-300 mb-12 max-w-2xl mx-auto">I am proud to have collaborated with amazing clients and teams. Here's what they have to say.</p>
+                    
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {testimonials.map((testimonial, index) => (
+                            // Testimonial cards now stand out against the dark background
+                            <div key={index} className="bg-brand-surface p-8 rounded-lg border border-brand-border shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                                <div className="flex items-center mb-4">
+                                    <img src={testimonial.image} alt={testimonial.name} className="w-16 h-16 rounded-full mr-4" />
+                                    <div>
+                                        <h4 className="font-bold text-lg text-brand-text-dark">{testimonial.name}</h4>
+                                        <p className="text-sm text-brand-text-muted">{testimonial.title}</p>
+                                    </div>
+                                </div>
+                                <p className="text-brand-text-muted italic">"{testimonial.quote}"</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </AnimatedSection>
+        </section>
+    );
+}
+        // --- Contact ---
+        function Contact() {
+            const [message, setMessage] = React.useState('');
+            const [isGenerating, setIsGenerating] = React.useState(false);
+            const socialLinks = { linkedin: '#', github: '#', instagram: '#', whatsapp: 'https://wa.me/yourphonenumber', x: '#' };
+
+            const handleGenerateMessage = async () => {
+                const keywords = window.prompt("Enter a few keywords for your message (e.g., 'collaboration on React project', 'job opportunity')");
+                if (!keywords) return;
+
+                setIsGenerating(true);
+                const prompt = `You are a professional communication assistant. Write a friendly and professional contact message from a visitor to a portfolio owner named Kanchana. The message should be based on these keywords: "${keywords}". Keep it concise, around 3-4 sentences.`;
+                const generatedMessage = await callGeminiAPI(prompt);
+                setMessage(generatedMessage);
+                setIsGenerating(false);
+            };
+            
+            return (
+                <section id="contact" className="py-20 bg-brand-section-bg text-brand-text-light">
+                    <AnimatedSection>
+                        <div className="container mx-auto px-4">
+                            <h2 className="text-3xl font-display font-bold text-center mb-12">Get In Touch</h2>
+                            <div className="max-w-4xl mx-auto grid md:grid-cols-2 gap-12 bg-brand-bg/50 p-8 rounded-lg border border-gray-700 shadow-xl">
+                                <div>
+                                    <h3 className="text-2xl font-bold mb-4">Send me a message</h3>
+                                    <form action="https://formspree.io/f/your_form_id_here" method="POST">
+                                        <div className="mb-4">
+                                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-300">Your Name</label>
+                                            <input type="text" name="name" id="name" required className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-text-light" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-300">Your Email</label>
+                                            <input type="email" name="email" id="email" required className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-text-light" />
+                                        </div>
+                                        <div className="mb-4">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <label htmlFor="message" className="block text-sm font-medium text-gray-300">Message</label>
+                                                <button type="button" onClick={handleGenerateMessage} disabled={isGenerating} className="text-sm text-brand-primary hover:underline flex items-center disabled:opacity-50">
+                                                    {isGenerating ? <span className="spinner mr-1"></span> : '✨'} Help me write
+                                                </button>
+                                            </div>
+                                            <textarea name="message" id="message" rows="4" required value={message} onChange={(e) => setMessage(e.target.value)} className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary text-brand-text-light"></textarea>
+                                        </div>
+                                        <button type="submit" className="w-full bg-brand-primary text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 transition-colors duration-300">Send Message</button>
+                                    </form>
+                                </div>
+                                <div>
+                                    <h3 className="text-2xl font-bold mb-4">Contact Information</h3>
+                                    <p className="text-gray-300 mb-6">I'm currently open to new opportunities. Feel free to reach out for collaborations or just a friendly chat.</p>
+                                    <div className="space-y-4">
+                                        <p className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-brand-primary" viewBox="0 0 20 20" fill="currentColor"><path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" /><path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" /></svg> <span>kanchanaz2002@gmail.com</span></p>
+                                        <p className="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 text-brand-primary" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" /></svg> <span>Sabaragamuwa University, Sri Lanka</span></p>
+                                    </div>
+                                    <div className="mt-8 flex space-x-4">
+                                        <a href="#" className="text-gray-400 hover:text-brand-primary transition-colors"><svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg></a>
+                                        <a href="#" className="text-gray-400 hover:text-brand-primary transition-colors"><svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.91 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
+                                        <a href="#" className="text-gray-400 hover:text-brand-primary transition-colors"><svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H4.68l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </AnimatedSection>
+                </section>
+            );
+        }
+
+        // --- Footer ---
+        function Footer() {
+            const currentYear = new Date().getFullYear(); 
+            return (
+                <footer className="bg-brand-surface border-t border-brand-border py-6 text-brand-text-dark">
+                    <div className="container mx-auto text-center text-brand-text-muted">
+                        <p>&copy; {currentYear} Kanchana Piyasekara. All rights reserved.</p>
+                    </div>
+                </footer>
+            );
+        }
+        
+        // =========== Page Components ===========
+        function HomePage({ onProjectClick }) {
+            return (
+                <div>
+                    <Navbar onProjectClick={onProjectClick} />
+                    <main>
+                        <Hero />
+                        <About />
+                        <Education />
+                        <Stats />
+                        <Experience />
+                        <Skills />
+                        <Gallery />
+                        <Projects onProjectClick={onProjectClick} />
+                        <Testimonials />
+                        <Contact />
+                    </main>
+                    <Footer />
+                </div>
+            );
+        }
+
+        function ProjectsPage({ onHomeClick, targetProject }) {
+            React.useEffect(() => {
+                if (targetProject) {
+                    const element = document.getElementById(targetProject);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            }, [targetProject]);
+
+            const completedProjects = allProjects.filter(p => p.status === 'completed');
+            const ongoingProjects = allProjects.filter(p => p.status === 'ongoing');
+            const upcomingProjects = allProjects.filter(p => p.status === 'upcoming');
+
+            const ProjectDetailCard = ({ project }) => (
+                <div id={project.id} className="bg-brand-surface rounded-lg shadow-2xl overflow-hidden mb-16 scroll-mt-24">
+                    <img src={`https://placehold.co/1200x600/${'6f42c1'.substring(1)}/ffffff?text=${project.title}`} alt={project.title} className="w-full h-64 object-cover" />
+                    <div className="p-8 md:p-12">
+                        <h3 className="font-display text-4xl font-bold text-brand-text-dark mb-4">{project.title}</h3>
+                        <div className="flex flex-wrap gap-x-6 gap-y-2 mb-6 text-brand-text-muted">
+                            <span><strong className="font-semibold text-brand-primary">Client:</strong> {project.client}</span>
+                            <span><strong className="font-semibold text-brand-primary">My Role:</strong> {project.myRole}</span>
+                        </div>
+                        <div className="grid md:grid-cols-3 gap-8">
+                            <div className="md:col-span-2">
+                                <h4 className="font-bold text-xl text-brand-text-dark mb-2">In-Depth Description</h4>
+                                <p className="text-brand-text-muted leading-relaxed">{project.longDescription}</p>
+                            </div>
+                            <div>
+                                <h4 className="font-bold text-xl text-brand-text-dark mb-2">UI/UX Design</h4>
+                                <p className="text-brand-text-muted leading-relaxed mb-4">{project.uiUxDescription}</p>
+                                <img src={`https://placehold.co/400x300/E9ECEF/6C757D?text=UI+Mockup`} alt="UI Mockup" className="rounded-md shadow-lg" />
+                            </div>
+                        </div>
+                        <div className="mt-8 flex space-x-4">
+                            <a href="#" className="bg-brand-primary text-white font-bold py-2 px-5 rounded-lg hover:bg-purple-700 transition-colors">Live Demo</a>
+                            <a href="#" className="bg-brand-border text-brand-text-dark font-bold py-2 px-5 rounded-lg hover:bg-gray-200 transition-colors">Source Code</a>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            return (
+                <div>
+                    <header className="bg-brand-bg/80 backdrop-blur-md sticky top-0 z-40 border-b border-gray-700">
+                        <div className="container mx-auto flex justify-between items-center p-4">
+                            <a href="#" onClick={(e) => { e.preventDefault(); onHomeClick(); }} className="font-display font-bold text-xl text-brand-text-light">Kanchana Piyasekara</a>
+                            <nav>
+                                <button onClick={onHomeClick} className="font-medium text-brand-text-light hover:text-brand-primary transition-colors duration-300">← Back to Home</button>
+                            </nav>
+                        </div>
+                    </header>
+                    <main className="py-20 bg-brand-bg text-brand-text-light">
+                        <div className="container mx-auto px-4">
+                            <h2 className="text-4xl font-display font-bold text-center mb-4">Project Case Studies</h2>
+                            <p className="text-center text-gray-400 mb-16 max-w-2xl mx-auto">A detailed look at the challenges, processes, and outcomes of my work.</p>
+                            
+                            <div id="completed-projects">
+                                <h3 className="text-3xl font-bold mb-8 border-l-4 border-brand-primary pl-4">Completed Projects</h3>
+                                {completedProjects.map(p => <ProjectDetailCard key={p.id} project={p} />)}
+                            </div>
+                            <div id="ongoing-projects">
+                                <h3 className="text-3xl font-bold mb-8 border-l-4 border-brand-secondary pl-4">Ongoing Projects</h3>
+                                {ongoingProjects.map(p => <ProjectDetailCard key={p.id} project={p} />)}
+                            </div>
+                            <div id="upcoming-projects">
+                                <h3 className="text-3xl font-bold mb-8 border-l-4 border-yellow-500 pl-4">Upcoming Projects</h3>
+                                {upcomingProjects.map(p => <ProjectDetailCard key={p.id} project={p} />)}
+                            </div>
+                        </div>
+                    </main>
+                    <Footer />
+                </div>
+            );
+        }
+        
+        // =========== Main App Component ===========
+        function App() {
+            const [page, setPage] = React.useState('home');
+            const [targetProject, setTargetProject] = React.useState(null);
+
+            const navigateToProjects = (projectId) => {
+                setTargetProject(projectId);
+                setPage('projects');
+                window.scrollTo(0, 0); // Scroll to top on page change
+            };
+
+            const navigateToHome = () => {
+                setTargetProject(null);
+                setPage('home');
+                window.scrollTo(0, 0);
+            };
+
+            return (
+                <div>
+                    {page === 'home' && <HomePage onProjectClick={navigateToProjects} />}
+                    {page === 'projects' && <ProjectsPage onHomeClick={navigateToHome} targetProject={targetProject} />}
+                </div>
+            );
+        }
+
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+    </script>
+</body>
+</html>
+
